@@ -1,0 +1,17 @@
+[package]
+name = "grid_scorer"
+version = "0.1.0"
+edition = "2021"
+
+description = "A Rust project that implements GridScorer functionality."
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]] 
+name = "main"
+path = "src/main.rs" 
+
+[[test]]  # Specify test files
+name = "grid_scorer_integration"
+path = "tests/grid_scorer_integration.rs"
