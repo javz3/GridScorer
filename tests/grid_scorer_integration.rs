@@ -19,10 +19,12 @@ mod tests {
     #[test]
     fn success_with_more_scores_requested_than_elements() {
         // Arrange
+        let count_of_high_scores = 10;
+        let row_length = 2;
         let array = vec![1, 2, 3, 4];
 
         // Act
-        let result =  grid_scorer::get_top_scores(10, 2, &array).unwrap();
+        let result =  grid_scorer::get_top_scores(count_of_high_scores, row_length, &array).unwrap();
 
         // Assert
         assert!(result.contains("(0, 0, 10)"));        
@@ -31,10 +33,12 @@ mod tests {
     #[test]
     fn failure_with_zero_row_length() {
         // Arrange
+        let count_of_high_scores = 3;
+        let row_length = 0;
         let array = vec![1, 2, 3, 4];
 
         // Act
-        let result =  grid_scorer::get_top_scores(3, 0, &array);
+        let result =  grid_scorer::get_top_scores(count_of_high_scores, row_length, &array);
         
         // Assert
         assert!(result.is_err());
@@ -44,10 +48,12 @@ mod tests {
     #[test]
     fn failure_with_empty_array() {
         // Arrange
+        let count_of_high_scores = 2;
+        let row_length = 2;
         let array = &[];
 
         // Act
-        let result =  grid_scorer::get_top_scores(3, 3, array);
+        let result =  grid_scorer::get_top_scores(count_of_high_scores, row_length, array);
 
         // Assert
         assert!(result.is_err());
@@ -57,10 +63,12 @@ mod tests {
     #[test]
     fn failure_with_incorrect_array_length() {
         // Arrange
+        let count_of_high_scores = 3;
+        let row_length = 2;
         let array = vec![1, 2, 3, 4, 5];
 
         // Act
-        let result =  grid_scorer::get_top_scores(3, 2, &array);
+        let result =  grid_scorer::get_top_scores(count_of_high_scores, row_length, &array);
 
         // Assert
         assert!(result.is_err());
