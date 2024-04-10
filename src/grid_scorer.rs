@@ -1,3 +1,5 @@
+use std::fmt;
+
 // Struct to hold the score along with its location
 #[derive(Debug)]
 pub struct ScoreLocation {
@@ -9,6 +11,13 @@ pub struct ScoreLocation {
 impl ScoreLocation {
     pub fn new(x: usize, y: usize, score: i32) -> Self {
         ScoreLocation { x, y, score }
+    }
+}
+
+// Implementing Display trait for ScoreLocation to customize printing
+impl fmt::Display for ScoreLocation {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "({}, {}, {})", self.x, self.y, self.score)
     }
 }
 
@@ -26,11 +35,7 @@ pub fn get_top_scores(count_of_high_scores: usize, row_length: usize, array: &[i
 
 // Converts a linear array to a 2D grid
 fn convert_array_to_grid(row_length: usize, array: &[i32]) -> Vec<Vec<i32>> {
-    let mut grid = vec![vec![0; row_length]; row_length];
-    for (i, &value) in array.iter().enumerate() {
-        grid[i / row_length][i % row_length] = value;
-    }
-    grid
+    array.chunks(row_length).map(|chunk| chunk.to_vec()).collect()
 }
 
 // Calculates scores for each grid location
@@ -65,5 +70,5 @@ fn sort_scores(mut scores: Vec<ScoreLocation>, count: usize) -> Vec<ScoreLocatio
 
 // Formats the scores into the required string output
 fn format_scores(scores: &[ScoreLocation]) -> String {
-    scores.iter().map(|s| format!("({}, {}, {})", s.x, s.y, s.score)).collect::<Vec<String>>().join("")
+    scores.iter().map(|s| s.to_string()).collect::<Vec<String>>().join("")
 }
