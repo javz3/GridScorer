@@ -6,10 +6,10 @@ Example array: `[4,2,3,2,0,1,2,2,1,3,0,2,2,0,1,5]`
 
 Example matrix from the above array:
 
-4 | 2 | 3 | 2
-0 | 1 | 2 | 2
-1 | 3 | 0 | 2
-2 | 0 | 1 | 5
+`4 | 2 | 3 | 2`
+`0 | 1 | 2 | 2`
+`1 | 3 | 0 | 2`
+`2 | 0 | 1 | 5`
 
 Example of input:
 
