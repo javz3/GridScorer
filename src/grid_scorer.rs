@@ -23,8 +23,14 @@ impl fmt::Display for ScoreLocation {
 
 // Main function to calculate and return top scores in formatted string
 pub fn get_top_scores(count_of_high_scores: usize, row_length: usize, array: &[i32]) -> Result<String, String> {
-    if row_length == 0 || array.is_empty() || array.len() != row_length * row_length {
-        return Err("Invalid grid dimensions or array is null.".to_string());
+    if row_length <= 0 {
+        return Err("Invalid row_length provided".to_string());
+    }
+    if array.is_empty() {
+        return Err("Array is null".to_string());
+    }
+    if array.len() != row_length * row_length {
+        return Err("Array length does not equal to matrix size".to_string());
     }
 
     let grid = convert_array_to_grid(row_length, array);
@@ -40,7 +46,7 @@ fn convert_array_to_grid(row_length: usize, array: &[i32]) -> Vec<Vec<i32>> {
 
 // Calculates scores for each grid location
 fn calculate_scores(grid: &[Vec<i32>], row_length: usize) -> Vec<ScoreLocation> {
-    let mut scores = Vec::new();
+    let mut scores = Vec::with_capacity(row_length * row_length);
 
     for x in 0..row_length {
         for y in 0..row_length {
@@ -70,5 +76,5 @@ fn sort_scores(mut scores: Vec<ScoreLocation>, count: usize) -> Vec<ScoreLocatio
 
 // Formats the scores into the required string output
 fn format_scores(scores: &[ScoreLocation]) -> String {
-    scores.iter().map(|s| s.to_string()).collect::<Vec<String>>().join("")
+    scores.iter().map(|s| s.to_string()).collect::<String>()
 }
