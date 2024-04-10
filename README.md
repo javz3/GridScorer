@@ -1,6 +1,25 @@
 # GridScorer
 
-GridScorer takes in a linear array and turns into an n matrix; based on the input it will calculate the highest score from itself and the surrounding location.
+GridScorer takes in a linear array and turns into an n matrix; based on the input it will calculate the highest score from itself and the surrounding location. This will then return a string result with the following format (x, y, total value)
+
+Example array: `[4,2,3,2,0,1,2,2,1,3,0,2,2,0,1,5]`
+
+Example matrix from the above array:
+
+4 | 2 | 3 | 2
+0 | 1 | 2 | 2
+1 | 3 | 0 | 2
+2 | 0 | 1 | 5
+
+Example of input:
+
+`countOfHighScores = 2`
+`rowLength = 4`
+`array = [4,2,3,2,0,1,2,2,1,3,0,2,2,0,1,5]`
+
+Example of output:
+
+`(1, 2, 17)(1, 1, 16)`
 
 ## Setup
 
