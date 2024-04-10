@@ -37,4 +37,5 @@ Make sure to have rustup installed - https://www.rust-lang.org/tools/install
 You can use your IDE of your choice, but I will provide the setup for Visual Studio Code:
 
 1) Install the "rust-analyzer" extension (this aids with development and the ability to build the project)
+    - Using the shortcut ctrl + shift + B, you will get the option to build, check or run clippy (conforming to the standard style of Rust) against the project
 2) Install "CodeLLDB" this will help running tests locally

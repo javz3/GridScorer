@@ -1,6 +1,3 @@
-use std::fmt;
-use std::collections::HashMap;
-
 // Struct to hold the score along with its location
 #[derive(Debug)]
 pub struct ScoreLocation {
