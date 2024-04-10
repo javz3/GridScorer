@@ -1,1 +1,1 @@
-D:\Dev\Rust\grid_scorer\target\debug\main.exe: D:\Dev\Rust\grid_scorer\src\grid_scorer.rs D:\Dev\Rust\grid_scorer\src\lib.rs D:\Dev\Rust\grid_scorer\src\main.rs
+D:\Dev\Rust\GridScorer\target\debug\main.exe: D:\Dev\Rust\GridScorer\src\grid_scorer.rs D:\Dev\Rust\GridScorer\src\lib.rs D:\Dev\Rust\GridScorer\src\main.rs
