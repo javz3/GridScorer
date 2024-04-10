@@ -1,4 +1,5 @@
 mod grid_scorer;
+mod score_location;
 
 fn main() {
     let count_of_high_scores = 2;

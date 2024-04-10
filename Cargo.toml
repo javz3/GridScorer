@@ -5,6 +5,9 @@ edition = "2021"
 
 description = "A Rust project that implements GridScorer functionality."
 
+[dependencies]
+rayon = "1.5.1"
+
 [lib]
 path = "src/lib.rs"
 

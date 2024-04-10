@@ -1,25 +1,5 @@
-use std::fmt;
-
-// Struct to hold the score along with its location
-#[derive(Debug)]
-pub struct ScoreLocation {
-    pub x: usize,
-    pub y: usize,
-    pub score: i32,
-}
-
-impl ScoreLocation {
-    pub fn new(x: usize, y: usize, score: i32) -> Self {
-        ScoreLocation { x, y, score }
-    }
-}
-
-// Implementing Display trait for ScoreLocation to customize printing
-impl fmt::Display for ScoreLocation {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "({}, {}, {})", self.x, self.y, self.score)
-    }
-}
+use rayon::prelude::*;
+use crate::score_location::ScoreLocation;
 
 // Main function to calculate and return top scores in formatted string
 pub fn get_top_scores(count_of_high_scores: usize, row_length: usize, array: &[i32]) -> Result<String, String> {
@@ -30,51 +10,48 @@ pub fn get_top_scores(count_of_high_scores: usize, row_length: usize, array: &[i
         return Err("Array is null".to_string());
     }
     if array.len() != row_length * row_length {
-        return Err("Array length does not equal to matrix size".to_string());
+        return Err("Array length does not match matrix size".to_string());
     }
 
-    let grid = convert_array_to_grid(row_length, array);
-    let scores = calculate_scores(&grid, row_length);
-    let sorted_scores = sort_scores(scores, count_of_high_scores);
+    let scores = calculate_scores_parallel(array, row_length);
+    let sorted_scores = sort_scores_parallel(scores, count_of_high_scores);
     Ok(format_scores(&sorted_scores))
 }
 
-// Converts a linear array to a 2D grid
-fn convert_array_to_grid(row_length: usize, array: &[i32]) -> Vec<Vec<i32>> {
-    array.chunks(row_length).map(|chunk| chunk.to_vec()).collect()
-}
-
-// Calculates scores for each grid location
-fn calculate_scores(grid: &[Vec<i32>], row_length: usize) -> Vec<ScoreLocation> {
-    let mut scores = Vec::with_capacity(row_length * row_length);
-
-    for x in 0..row_length {
-        for y in 0..row_length {
-            let mut score = 0;
-            for dx in -1..=1 {
-                for dy in -1..=1 {
-                    let nx = x as i32 + dx;
-                    let ny = y as i32 + dy;
-                    if nx >= 0 && nx < row_length as i32 && ny >= 0 && ny < row_length as i32 {
-                        score += grid[nx as usize][ny as usize];
-                    }
+/*
+   - Instead of creating a 2D grid, this function works directly on the 1D array for memory efficiency.
+   - It uses the rayon crate (a parallel iterator - .into_par_iter()) to parallelise the loop, computing
+     each score in parallel to utilise multi-core processors effectively.
+*/
+fn calculate_scores_parallel(array: &[i32], row_length: usize) -> Vec<ScoreLocation> {
+    (0..row_length*row_length).into_par_iter().map(|idx| {
+        let x = idx / row_length;
+        let y = idx % row_length;
+        let mut score = 0;
+        for dx in -1..=1 {
+            for dy in -1..=1 {
+                let nx = x as i32 + dx;
+                let ny = y as i32 + dy;
+                if nx >= 0 && nx < row_length as i32 && ny >= 0 && ny < row_length as i32 {
+                    score += array[(nx as usize) * row_length + ny as usize];
                 }
             }
-            scores.push(ScoreLocation::new(x, y, score));
         }
-    }
-
-    scores
+        ScoreLocation::new(x, y, score)
+    }).collect()
 }
 
-// Sorts scores and locations, selecting top entries
-fn sort_scores(mut scores: Vec<ScoreLocation>, count: usize) -> Vec<ScoreLocation> {
-    scores.sort_by(|a, b| b.score.cmp(&a.score).then_with(|| a.y.cmp(&b.y)).then_with(|| a.x.cmp(&b.x)));
+/*
+   - This function sorts the scores in parallel using par_sort_unstable_by, a parallel sorting algorithm provided by rayon. 
+   - It's "unstable" because it doesn't guarantee the order of equal elements, which is fine here since we care about the order based on scores.
+   - After sorting, it truncates the vector to keep only the top N scores.
+ */
+fn sort_scores_parallel(mut scores: Vec<ScoreLocation>, count: usize) -> Vec<ScoreLocation> {
+    scores.par_sort_unstable_by(|a, b| b.score.cmp(&a.score).then_with(|| a.y.cmp(&b.y)).then_with(|| a.x.cmp(&b.x)));
     scores.truncate(count);
     scores
 }
 
-// Formats the scores into the required string output
 fn format_scores(scores: &[ScoreLocation]) -> String {
-    scores.iter().map(|s| s.to_string()).collect::<String>()
+    scores.iter().map(|s| s.to_string()).collect::<Vec<_>>().join(", ")
 }
