@@ -1,25 +1,4 @@
-use std::fmt;
-
-// Struct to hold the score along with its location
-#[derive(Debug)]
-pub struct ScoreLocation {
-    pub x: usize,
-    pub y: usize,
-    pub score: i32,
-}
-
-impl ScoreLocation {
-    pub fn new(x: usize, y: usize, score: i32) -> Self {
-        ScoreLocation { x, y, score }
-    }
-}
-
-// Implementing Display trait for ScoreLocation to customize printing
-impl fmt::Display for ScoreLocation {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "({}, {}, {})", self.x, self.y, self.score)
-    }
-}
+use crate::score_location::ScoreLocation;
 
 // Main function to calculate and return top scores in formatted string
 pub fn get_top_scores(count_of_high_scores: usize, row_length: usize, array: &[i32]) -> Result<String, String> {
@@ -48,33 +27,36 @@ fn convert_array_to_grid(row_length: usize, array: &[i32]) -> Vec<Vec<i32>> {
 fn calculate_scores(grid: &[Vec<i32>], row_length: usize) -> Vec<ScoreLocation> {
     let mut scores = Vec::with_capacity(row_length * row_length);
 
-    for x in 0..row_length {
-        for y in 0..row_length {
-            let mut score = 0;
-            for dx in -1..=1 {
-                for dy in -1..=1 {
-                    let nx = x as i32 + dx;
-                    let ny = y as i32 + dy;
-                    if nx >= 0 && nx < row_length as i32 && ny >= 0 && ny < row_length as i32 {
-                        score += grid[nx as usize][ny as usize];
+    for row_index in 0..row_length {
+        for col_index in 0..row_length {
+            let mut cell_score = 0;
+            for neighbor_row_offset in -1..=1 {
+                for neighbor_col_offset in -1..=1 {
+                    let neighbor_row = row_index as i32 + neighbor_row_offset;
+                    let neighbor_col = col_index as i32 + neighbor_col_offset;
+                    if neighbor_row >= 0 && neighbor_row < row_length as i32 && neighbor_col >= 0 && neighbor_col < row_length as i32 {
+                        cell_score += grid[neighbor_row as usize][neighbor_col as usize];
                     }
                 }
             }
-            scores.push(ScoreLocation::new(x, y, score));
+            scores.push(ScoreLocation::new(row_index, col_index, cell_score));
         }
-    }
+    }    
 
     scores
 }
 
 // Sorts scores and locations, selecting top entries
-fn sort_scores(mut scores: Vec<ScoreLocation>, count: usize) -> Vec<ScoreLocation> {
-    scores.sort_by(|a, b| b.score.cmp(&a.score).then_with(|| a.y.cmp(&b.y)).then_with(|| a.x.cmp(&b.x)));
-    scores.truncate(count);
-    scores
+fn sort_scores(mut score_locations: Vec<ScoreLocation>, top_n: usize) -> Vec<ScoreLocation> {
+    score_locations.sort_by(|first, second| second.score.cmp(&first.score)
+        .then_with(|| first.y.cmp(&second.y))
+        .then_with(|| first.x.cmp(&second.x)));
+    score_locations.truncate(top_n);
+    score_locations
 }
 
+
 // Formats the scores into the required string output
-fn format_scores(scores: &[ScoreLocation]) -> String {
-    scores.iter().map(|s| s.to_string()).collect::<String>()
+fn format_scores(score_locations: &[ScoreLocation]) -> String {
+    score_locations.iter().map(|score_location| score_location.to_string()).collect::<String>()
 }
