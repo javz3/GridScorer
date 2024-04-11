@@ -39,3 +39,17 @@ You can use your IDE of your choice, but I will provide the setup for Visual Stu
 1) Install the "rust-analyzer" extension (this aids with development and the ability to build the project)
     - Using the shortcut ctrl + shift + B, you will get the option to build, check or run clippy (conforming to the standard style of Rust) against the project
 2) Install "CodeLLDB" this will help running tests locally
+
+## Build Project
+
+To build the project, in terminal run the follwing command:
+
+`cargo build`
+
+## Test Project
+
+To test the project, in terminal run the follwing command:
+
+`cargo test`
+
+You can also run tests within thet test file; either all test from the top of the class or for each individual test (You MUST have CodeLLB installed for this)
