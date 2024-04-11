@@ -42,7 +42,7 @@ mod tests {
         
         // Assert
         assert!(result.is_err());
-        assert_eq!(result.unwrap_err(), "Invalid row_length provided");
+        assert_eq!(result.unwrap_err(), "Invalid row length provided");
     }
 
     #[test]
